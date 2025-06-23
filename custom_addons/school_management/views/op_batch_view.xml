@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_op_batch_form_school_inherit" model="ir.ui.view">
+        <field name="name">op.batch.form.school.inherit</field>
+        <field name="model">op.batch</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_batch_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="school_cycle"/>
+                <field name="batch_type"/>
+            </field>
+            <sheet position="inside">
+                <group name="teaching_team" string="Équipe Pédagogique">
+                    <group name="teachers">
+                        <field name="class_teacher_id"/>
+                        <field name="deputy_teacher_id"/>
+                    </group>
+                    <group name="capacity">
+                        <field name="total_capacity"/>
+                        <field name="student_count" readonly="1"/>
+                        <field name="available_seats" readonly="1"/>
+                    </group>
+                </group>
+                <group name="statistics" string="Statistiques">
+                    <group name="gender_stats">
+                        <field name="male_count" readonly="1"/>
+                        <field name="female_count" readonly="1"/>
+                    </group>
+                    <group name="performance_stats">
+                        <field name="class_average" readonly="1"/>
+                        <field name="success_rate" readonly="1"/>
+                    </group>
+                </group>
+                <group name="communication" string="Communication">
+                    <field name="class_email"/>
+                    <field name="communication_group"/>
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+    <record id="view_op_batch_tree_school_inherit" model="ir.ui.view">
+        <field name="name">op.batch.tree.school.inherit</field>
+        <field name="model">op.batch</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_batch_tree"/>
+        <field name="arch" type="xml">
+            <tree position="inside">
+                <field name="school_cycle" optional="show"/>
+                <field name="batch_type" optional="show"/>
+                <field name="class_teacher_id" optional="show"/>
+                <field name="student_count" optional="show"/>
+                <field name="total_capacity" optional="show"/>
+                <field name="available_seats" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_op_batch_search_school_inherit" model="ir.ui.view">
+        <field name="name">op.batch.search.school.inherit</field>
+        <field name="model">op.batch</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_batch_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <field name="school_cycle"/>
+                <field name="batch_type"/>
+                <field name="class_teacher_id"/>
+                <separator/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_school_cycle" string="Cycle Scolaire" context="{'group_by': 'school_cycle'}"/>
+                    <filter name="group_batch_type" string="Type de Classe" context="{'group_by': 'batch_type'}"/>
+                    <filter name="group_teacher" string="Professeur Principal" context="{'group_by': 'class_teacher_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo> 

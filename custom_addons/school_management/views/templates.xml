@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--
+        <template id="listing">
+          <ul>
+            <li t-foreach="objects" t-as="object">
+              <a t-attf-href="#{ root }/objects/#{ object.id }">
+                <t t-esc="object.display_name"/>
+              </a>
+            </li>
+          </ul>
+        </template>
+        <template id="object">
+          <h1><t t-esc="object.display_name"/></h1>
+          <dl>
+            <t t-foreach="object._fields" t-as="field">
+              <dt><t t-esc="field"/></dt>
+              <dd><t t-esc="object[field]"/></dd>
+            </t>
+          </dl>
+        </template>
+-->
+    </data>
+    <!-- Modèle de page web -->
+    <template id="school_index" name="School Management Main Page">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <div class="jumbotron">
+                    <h1 class="display-4">Système de Gestion Scolaire</h1>
+                    <p class="lead">Bienvenue sur le système de gestion scolaire.</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Étudiants</h5>
+                                <p class="card-text">Gestion des dossiers étudiants, inscriptions et suivis.</p>
+                                <a href="/web#action=school_management.action_student_view" class="btn btn-primary">Accéder</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Enseignants</h5>
+                                <p class="card-text">Gestion du personnel enseignant et attribution des cours.</p>
+                                <a href="/web#action=school_management.action_teacher_view" class="btn btn-primary">Accéder</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Cours</h5>
+                                <p class="card-text">Organisation des cours, planification et ressources.</p>
+                                <a href="/web#action=school_management.action_course_view" class="btn btn-primary">Accéder</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!-- Commenté pour éviter les erreurs au démarrage - sera activé après l'installation
+    <template id="assets_backend" name="school_management assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/css" href="/school_management/static/src/css/school_management.css"/>
+        </xpath>
+    </template>
+    -->
+</odoo>

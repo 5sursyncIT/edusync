@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Séquence pour les numéros de bulletins -->
+    <record id="seq_op_bulletin" model="ir.sequence">
+        <field name="name">Numérotation Bulletins</field>
+        <field name="code">op.bulletin</field>
+        <field name="prefix">BULL/</field>
+        <field name="suffix">/%(y)s</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Trimestres par défaut pour l'année 2024-2025 -->
+    <record id="trimestre_1_2024_2025_primaire" model="op.trimestre">
+        <field name="name">Premier Trimestre</field>
+        <field name="code">T1</field>
+        <field name="date_debut">2024-09-01</field>
+        <field name="date_fin">2024-12-20</field>
+        <field name="annee_scolaire">2024-2025</field>
+        <field name="education_level">primaire</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="trimestre_2_2024_2025_primaire" model="op.trimestre">
+        <field name="name">Deuxième Trimestre</field>
+        <field name="code">T2</field>
+        <field name="date_debut">2025-01-06</field>
+        <field name="date_fin">2025-03-28</field>
+        <field name="annee_scolaire">2024-2025</field>
+        <field name="education_level">primaire</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="trimestre_3_2024_2025_primaire" model="op.trimestre">
+        <field name="name">Troisième Trimestre</field>
+        <field name="code">T3</field>
+        <field name="date_debut">2025-04-14</field>
+        <field name="date_fin">2025-06-30</field>
+        <field name="annee_scolaire">2024-2025</field>
+        <field name="education_level">primaire</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Trimestres pour le collège -->
+    <record id="trimestre_1_2024_2025_college" model="op.trimestre">
+        <field name="name">Premier Trimestre</field>
+        <field name="code">T1</field>
+        <field name="date_debut">2024-09-01</field>
+        <field name="date_fin">2024-12-20</field>
+        <field name="annee_scolaire">2024-2025</field>
+        <field name="education_level">college</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="trimestre_2_2024_2025_college" model="op.trimestre">
+        <field name="name">Deuxième Trimestre</field>
+        <field name="code">T2</field>
+        <field name="date_debut">2025-01-06</field>
+        <field name="date_fin">2025-03-28</field>
+        <field name="annee_scolaire">2024-2025</field>
+        <field name="education_level">college</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="trimestre_3_2024_2025_college" model="op.trimestre">
+        <field name="name">Troisième Trimestre</field>
+        <field name="code">T3</field>
+        <field name="date_debut">2025-04-14</field>
+        <field name="date_fin">2025-06-30</field>
+        <field name="annee_scolaire">2024-2025</field>
+        <field name="education_level">college</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Modèles de bulletins par défaut -->
+    <record id="template_bulletin_primaire" model="op.bulletin.template">
+        <field name="name">Modèle Bulletin Primaire</field>
+        <field name="education_level">primaire</field>
+        <field name="show_rang">True</field>
+        <field name="show_moyenne_classe">True</field>
+        <field name="show_appreciation">True</field>
+        <field name="show_presence">True</field>
+        <field name="show_notes_detaillees">False</field>
+        <field name="note_max">20.0</field>
+        <field name="seuil_reussite">10.0</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="template_bulletin_college" model="op.bulletin.template">
+        <field name="name">Modèle Bulletin Collège</field>
+        <field name="education_level">college</field>
+        <field name="show_rang">True</field>
+        <field name="show_moyenne_classe">True</field>
+        <field name="show_appreciation">True</field>
+        <field name="show_presence">True</field>
+        <field name="show_notes_detaillees">True</field>
+        <field name="note_max">20.0</field>
+        <field name="seuil_reussite">10.0</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="template_bulletin_lycee" model="op.bulletin.template">
+        <field name="name">Modèle Bulletin Lycée</field>
+        <field name="education_level">lycee</field>
+        <field name="show_rang">True</field>
+        <field name="show_moyenne_classe">True</field>
+        <field name="show_appreciation">True</field>
+        <field name="show_presence">True</field>
+        <field name="show_notes_detaillees">True</field>
+        <field name="note_max">20.0</field>
+        <field name="seuil_reussite">10.0</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Barèmes d'appréciation pour le primaire -->
+    <record id="bareme_primaire_excellent" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_primaire"/>
+        <field name="note_min">18.0</field>
+        <field name="note_max">20.0</field>
+        <field name="appreciation">Excellent</field>
+        <field name="couleur">#28a745</field>
+    </record>
+
+    <record id="bareme_primaire_tres_bien" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_primaire"/>
+        <field name="note_min">16.0</field>
+        <field name="note_max">18.0</field>
+        <field name="appreciation">Très bien</field>
+        <field name="couleur">#6f42c1</field>
+    </record>
+
+    <record id="bareme_primaire_bien" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_primaire"/>
+        <field name="note_min">14.0</field>
+        <field name="note_max">16.0</field>
+        <field name="appreciation">Bien</field>
+        <field name="couleur">#007bff</field>
+    </record>
+
+    <record id="bareme_primaire_assez_bien" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_primaire"/>
+        <field name="note_min">12.0</field>
+        <field name="note_max">14.0</field>
+        <field name="appreciation">Assez bien</field>
+        <field name="couleur">#17a2b8</field>
+    </record>
+
+    <record id="bareme_primaire_passable" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_primaire"/>
+        <field name="note_min">10.0</field>
+        <field name="note_max">12.0</field>
+        <field name="appreciation">Passable</field>
+        <field name="couleur">#ffc107</field>
+    </record>
+
+    <record id="bareme_primaire_insuffisant" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_primaire"/>
+        <field name="note_min">0.0</field>
+        <field name="note_max">10.0</field>
+        <field name="appreciation">Insuffisant</field>
+        <field name="couleur">#dc3545</field>
+    </record>
+
+    <!-- Barèmes d'appréciation pour le collège (même structure) -->
+    <record id="bareme_college_excellent" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_college"/>
+        <field name="note_min">18.0</field>
+        <field name="note_max">20.0</field>
+        <field name="appreciation">Excellent</field>
+        <field name="couleur">#28a745</field>
+    </record>
+
+    <record id="bareme_college_tres_bien" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_college"/>
+        <field name="note_min">16.0</field>
+        <field name="note_max">18.0</field>
+        <field name="appreciation">Très bien</field>
+        <field name="couleur">#6f42c1</field>
+    </record>
+
+    <record id="bareme_college_bien" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_college"/>
+        <field name="note_min">14.0</field>
+        <field name="note_max">16.0</field>
+        <field name="appreciation">Bien</field>
+        <field name="couleur">#007bff</field>
+    </record>
+
+    <record id="bareme_college_assez_bien" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_college"/>
+        <field name="note_min">12.0</field>
+        <field name="note_max">14.0</field>
+        <field name="appreciation">Assez bien</field>
+        <field name="couleur">#17a2b8</field>
+    </record>
+
+    <record id="bareme_college_passable" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_college"/>
+        <field name="note_min">10.0</field>
+        <field name="note_max">12.0</field>
+        <field name="appreciation">Passable</field>
+        <field name="couleur">#ffc107</field>
+    </record>
+
+    <record id="bareme_college_insuffisant" model="op.bulletin.bareme">
+        <field name="template_id" ref="template_bulletin_college"/>
+        <field name="note_min">0.0</field>
+        <field name="note_max">10.0</field>
+        <field name="appreciation">Insuffisant</field>
+        <field name="couleur">#dc3545</field>
+    </record>
+</odoo> 

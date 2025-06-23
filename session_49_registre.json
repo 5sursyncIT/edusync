@@ -1,0 +1,56 @@
+{
+  "session_id": 49,
+  "session_name": "Session 6ème test (Science de la vie et de la terre)",
+  "batch": "6EME Test",
+  "date": "2025-06-13",
+  "students": [
+    {
+      "numero": 1,
+      "id": 65,
+      "nom_complet": "Aminata SALL",
+      "prenom": "Aminata",
+      "nom_famille": "SALL",
+      "email": "aminata.sall@6eme.edu",
+      "numero_etudiant": false,
+      "statut_presence": "ABSENT",
+      "remarques": "",
+      "peut_marquer_present": true
+    },
+    {
+      "numero": 2,
+      "id": 67,
+      "nom_complet": "Fatoumata FALL",
+      "prenom": "Fatoumata",
+      "nom_famille": "FALL",
+      "email": "fatoumata.fall@6eme.edu",
+      "numero_etudiant": false,
+      "statut_presence": "ABSENT",
+      "remarques": "",
+      "peut_marquer_present": true
+    },
+    {
+      "numero": 3,
+      "id": 68,
+      "nom_complet": "Ibrahima NDIAYE",
+      "prenom": "Ibrahima",
+      "nom_famille": "NDIAYE",
+      "email": "ibrahima.ndiaye@6eme.edu",
+      "numero_etudiant": false,
+      "statut_presence": "ABSENT",
+      "remarques": "",
+      "peut_marquer_present": true
+    },
+    {
+      "numero": 4,
+      "id": 66,
+      "nom_complet": "Moussa DIOP",
+      "prenom": "Moussa",
+      "nom_famille": "DIOP",
+      "email": "moussa.diop@6eme.edu",
+      "numero_etudiant": false,
+      "statut_presence": "ABSENT",
+      "remarques": "",
+      "peut_marquer_present": true
+    }
+  ]
+}

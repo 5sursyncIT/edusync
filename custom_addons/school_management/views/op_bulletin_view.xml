@@ -1,0 +1,849 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ============ TRIMESTRES ============ -->
+    
+    <!-- Vue arborescente pour les trimestres -->
+    <record id="view_op_trimestre_tree" model="ir.ui.view">
+        <field name="name">op.trimestre.tree</field>
+        <field name="model">op.trimestre</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="annee_scolaire"/>
+                <field name="education_level"/>
+                <field name="date_debut"/>
+                <field name="date_fin"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les trimestres -->
+    <record id="view_op_trimestre_form" model="ir.ui.view">
+        <field name="name">op.trimestre.form</field>
+        <field name="model">op.trimestre</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom du trimestre (ex: Trimestre 1)"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="education_level"/>
+                            <field name="annee_scolaire"/>
+                        </group>
+                        <group>
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche pour les trimestres -->
+    <record id="view_op_trimestre_search" model="ir.ui.view">
+        <field name="name">op.trimestre.search</field>
+        <field name="model">op.trimestre</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="annee_scolaire"/>
+                <field name="education_level"/>
+                <separator/>
+                <filter string="Actif" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactif" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Année Scolaire" name="annee_scolaire" context="{'group_by': 'annee_scolaire'}"/>
+                    <filter string="Niveau" name="education_level" context="{'group_by': 'education_level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ BULLETINS ============ -->
+    
+    <!-- Vue arborescente pour les bulletins -->
+    <record id="view_op_bulletin_tree" model="ir.ui.view">
+        <field name="name">op.bulletin.tree</field>
+        <field name="model">op.bulletin</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-warning="state == 'calculated'" decoration-success="state == 'validated'" decoration-primary="state == 'published'" decoration-muted="state == 'archived'">
+                <field name="numero_bulletin"/>
+                <field name="student_id"/>
+                <field name="course_id"/>
+                <field name="batch_id"/>
+                <field name="trimestre_id"/>
+                <field name="moyenne_generale"/>
+                <field name="rang_classe"/>
+                <field name="total_eleves_classe"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les bulletins -->
+    <record id="view_op_bulletin_form" model="ir.ui.view">
+        <field name="name">op.bulletin.form</field>
+        <field name="model">op.bulletin</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_calculate" string="Calculer" type="object" class="oe_highlight" 
+                            invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Valider" type="object" class="oe_highlight"
+                            invisible="state != 'calculated'"/>
+                    <button name="action_publish" string="Publier" type="object" class="oe_highlight"
+                            invisible="state != 'validated'"/>
+                    <button name="action_archive" string="Archiver" type="object"
+                            invisible="state != 'published'"/>
+                    <button name="action_reset_to_draft" string="Remettre en brouillon" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,calculated,validated,published"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="numero_bulletin"/>
+                        </h1>
+                    </div>
+                    
+                    <!-- Informations principales -->
+                    <group>
+                        <group string="Étudiant">
+                            <field name="student_id"/>
+                            <field name="course_id"/>
+                            <field name="batch_id"/>
+                        </group>
+                        <group string="Période">
+                            <field name="trimestre_id"/>
+                            <field name="annee_scolaire"/>
+                            <field name="date_creation"/>
+                            <field name="date_edition"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Résultats généraux -->
+                    <group string="Résultats Généraux">
+                        <group>
+                            <field name="moyenne_generale" widget="float"/>
+                            <field name="moyenne_generale_classe" widget="float"/>
+                            <field name="rang_classe"/>
+                            <field name="total_eleves_classe"/>
+                        </group>
+                        <group>
+                            <field name="taux_presence" widget="percentage"/>
+                            <field name="total_absences"/>
+                            <field name="total_retards"/>
+                            <field name="total_jours_cours"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Notebooks -->
+                    <notebook>
+                        <!-- Onglet Notes par matière -->
+                        <page string="Notes par Matière" name="notes">
+                            <field name="note_lines">
+                                <tree editable="bottom">
+                                    <field name="subject_id"/>
+                                    <field name="moyenne_matiere"/>
+                                    <field name="coefficient"/>
+                                    <field name="moyenne_classe_matiere"/>
+                                    <field name="rang_matiere"/>
+                                    <field name="appreciation"/>
+                                    <field name="teacher_id"/>
+                                    <field name="nombre_evaluations"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <!-- Onglet Appréciations -->
+                        <page string="Appréciations" name="appreciations">
+                            <group>
+                                <field name="appreciation_generale" nolabel="1"/>
+                                <field name="decision_conseil"/>
+                            </group>
+                        </page>
+                        
+                        <!-- Onglet Signatures -->
+                        <page string="Signatures" name="signatures">
+                            <group>
+                                <group string="Validation">
+                                    <field name="created_by" readonly="1"/>
+                                    <field name="validated_by" readonly="1"/>
+                                    <field name="published_by" readonly="1"/>
+                                </group>
+                                <group string="Signatures">
+                                    <field name="signature_enseignant"/>
+                                    <field name="signature_directeur"/>
+                                    <field name="signature_parent"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche pour les bulletins -->
+    <record id="view_op_bulletin_search" model="ir.ui.view">
+        <field name="name">op.bulletin.search</field>
+        <field name="model">op.bulletin</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="numero_bulletin"/>
+                <field name="student_id"/>
+                <field name="course_id"/>
+                <field name="batch_id"/>
+                <field name="trimestre_id"/>
+                <field name="annee_scolaire"/>
+                <separator/>
+                <filter string="Brouillon" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Calculé" name="calculated" domain="[('state', '=', 'calculated')]"/>
+                <filter string="Validé" name="validated" domain="[('state', '=', 'validated')]"/>
+                <filter string="Publié" name="published" domain="[('state', '=', 'published')]"/>
+                <filter string="Archivé" name="archived" domain="[('state', '=', 'archived')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Trimestre" name="trimestre_id" context="{'group_by': 'trimestre_id'}"/>
+                    <filter string="Classe" name="batch_id" context="{'group_by': 'batch_id'}"/>
+                    <filter string="État" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Année Scolaire" name="annee_scolaire" context="{'group_by': 'annee_scolaire'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue kanban pour les bulletins -->
+    <record id="view_op_bulletin_kanban" model="ir.ui.view">
+        <field name="name">op.bulletin.kanban</field>
+        <field name="model">op.bulletin</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="numero_bulletin"/>
+                <field name="student_id"/>
+                <field name="batch_id"/>
+                <field name="trimestre_id"/>
+                <field name="moyenne_generale"/>
+                <field name="rang_classe"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="numero_bulletin"/>
+                                    </strong>
+                                    <div class="o_kanban_record_subtitle">
+                                        <field name="student_id"/>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <field name="batch_id"/> - <field name="trimestre_id"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <strong>Moyenne: <field name="moyenne_generale"/>/20</strong>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span class="badge badge-secondary">
+                                                Rang: <field name="rang_classe"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============ MODÈLES DE BULLETINS ============ -->
+    
+    <!-- Vue arborescente pour les modèles de bulletins -->
+    <record id="view_op_bulletin_template_tree" model="ir.ui.view">
+        <field name="name">op.bulletin.template.tree</field>
+        <field name="model">op.bulletin.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="education_level"/>
+                <field name="note_max"/>
+                <field name="seuil_reussite"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les modèles de bulletins -->
+    <record id="view_op_bulletin_template_form" model="ir.ui.view">
+        <field name="name">op.bulletin.template.form</field>
+        <field name="model">op.bulletin.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom du modèle de bulletin"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Configuration Générale">
+                            <field name="education_level"/>
+                            <field name="note_max"/>
+                            <field name="seuil_reussite"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Options d'Affichage">
+                            <field name="show_rang"/>
+                            <field name="show_moyenne_classe"/>
+                            <field name="show_appreciation"/>
+                            <field name="show_presence"/>
+                            <field name="show_notes_detaillees"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Barème d'Appréciation" name="bareme">
+                            <field name="bareme_ids">
+                                <tree editable="bottom">
+                                    <field name="note_min"/>
+                                    <field name="note_max"/>
+                                    <field name="appreciation"/>
+                                    <field name="couleur" widget="color"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Personnalisation" name="custom">
+                            <group>
+                                <field name="header_logo" widget="image"/>
+                                <field name="header_text" widget="html"/>
+                                <field name="footer_text" widget="html"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ ACTIONS ============ -->
+    
+    <!-- Action pour les trimestres -->
+    <record id="act_open_op_trimestre_view" model="ir.actions.act_window">
+        <field name="name">Trimestres</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.trimestre</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_op_trimestre_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Action pour les bulletins -->
+    <record id="act_open_op_bulletin_view" model="ir.actions.act_window">
+        <field name="name">Bulletins Scolaires</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.bulletin</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_op_bulletin_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Action pour les modèles de bulletins -->
+    <record id="act_open_op_bulletin_template_view" model="ir.actions.act_window">
+        <field name="name">Modèles de Bulletins</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.bulletin.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- ============ MENUS ============ -->
+    
+    <!-- Menu principal Bulletins -->
+    <menuitem id="menu_op_bulletin_main"
+              name="Bulletins &amp; Notes"
+              parent="menu_school_exam_root"
+              sequence="20"/>
+
+    <!-- Sous-menus -->
+    <menuitem id="menu_op_trimestre"
+              name="Trimestres"
+              parent="menu_op_bulletin_main"
+              action="act_open_op_trimestre_view"
+              sequence="5"/>
+
+    <menuitem id="menu_op_bulletin"
+              name="Bulletins Scolaires"
+              parent="menu_op_bulletin_main"
+              action="act_open_op_bulletin_view"
+              sequence="10"/>
+
+    <menuitem id="menu_op_bulletin_template"
+              name="Modèles de Bulletins"
+              parent="menu_op_bulletin_main"
+              action="act_open_op_bulletin_template_view"
+              sequence="15"/>
+
+    <!-- ============ RAPPORTS ============ -->
+    
+    <!-- Rapport de bulletin -->
+    <report 
+        id="report_bulletin_scolaire"
+        model="op.bulletin"
+        string="Bulletin Scolaire"
+        report_type="qweb-pdf"
+        name="school_management.report_bulletin_template_professional"
+        file="school_management.report_bulletin_template_professional"
+        print_report_name="'Bulletin_%s_%s' % (object.student_id.name, object.trimestre_id.name)"
+    />
+
+    <!-- Template de rapport professionnel avec colonnes devoir/composition -->
+    <template id="report_bulletin_template_professional">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="bulletin">
+                <div class="page">
+                    <!-- CSS personnalisé pour un bulletin professionnel -->
+                    <style>
+                        .bulletin-header {
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            color: white;
+                            padding: 20px;
+                            margin-bottom: 20px;
+                            border-radius: 10px;
+                            text-align: center;
+                        }
+                        .bulletin-title {
+                            font-size: 28px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 2px;
+                            margin-bottom: 10px;
+                        }
+                        .bulletin-subtitle {
+                            font-size: 18px;
+                            font-weight: 300;
+                            opacity: 0.9;
+                        }
+                        .student-info {
+                            background: #f8f9fa;
+                            border: 2px solid #e9ecef;
+                            border-radius: 8px;
+                            padding: 20px;
+                            margin-bottom: 25px;
+                        }
+                        .info-section {
+                            margin-bottom: 15px;
+                        }
+                        .info-label {
+                            font-weight: bold;
+                            color: #495057;
+                            width: 150px;
+                            display: inline-block;
+                        }
+                        .info-value {
+                            color: #212529;
+                            font-weight: 500;
+                        }
+                        .notes-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                            font-size: 12px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        }
+                        .notes-table th {
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            color: white;
+                            padding: 12px 8px;
+                            text-align: center;
+                            font-weight: bold;
+                            font-size: 11px;
+                            border: 1px solid #dee2e6;
+                        }
+                        .notes-table td {
+                            padding: 10px 8px;
+                            text-align: center;
+                            border: 1px solid #dee2e6;
+                            vertical-align: middle;
+                        }
+                        .notes-table .subject-cell {
+                            text-align: left;
+                            font-weight: 500;
+                            background: #f8f9fa;
+                            padding-left: 15px;
+                        }
+                        .notes-table .moyenne-row {
+                            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+                            font-weight: bold;
+                            font-size: 13px;
+                        }
+                        .notes-table .moyenne-row td {
+                            padding: 15px 8px;
+                        }
+                        .appreciation-section {
+                            background: #e8f5e8;
+                            border-left: 4px solid #28a745;
+                            padding: 20px;
+                            margin: 25px 0;
+                            border-radius: 0 8px 8px 0;
+                        }
+                        .appreciation-title {
+                            font-weight: bold;
+                            color: #155724;
+                            margin-bottom: 10px;
+                            font-size: 16px;
+                        }
+                        .appreciation-text {
+                            color: #155724;
+                            line-height: 1.6;
+                            margin: 0;
+                        }
+                        .decision-section {
+                            background: #fff3cd;
+                            border-left: 4px solid #ffc107;
+                            padding: 20px;
+                            margin: 25px 0;
+                            border-radius: 0 8px 8px 0;
+                        }
+                        .decision-title {
+                            font-weight: bold;
+                            color: #856404;
+                            margin-bottom: 10px;
+                            font-size: 16px;
+                        }
+                        .decision-text {
+                            color: #856404;
+                            font-weight: bold;
+                            font-size: 18px;
+                            margin: 0;
+                        }
+                        .signatures-section {
+                            margin-top: 40px;
+                            padding-top: 30px;
+                            border-top: 2px solid #e9ecef;
+                        }
+                        .signature-box {
+                            text-align: center;
+                            padding: 15px;
+                            margin: 0 10px;
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            border: 2px dashed #dee2e6;
+                        }
+                        .signature-title {
+                            font-weight: bold;
+                            color: #495057;
+                            margin-bottom: 40px;
+                            font-size: 14px;
+                        }
+                        .signature-line {
+                            border-bottom: 2px solid #495057;
+                            height: 2px;
+                            margin-top: 20px;
+                        }
+                        .note-excellent { background-color: #d4edda !important; color: #155724; }
+                        .note-tres-bien { background-color: #cce7ff !important; color: #0c5460; }
+                        .note-bien { background-color: #fff3cd !important; color: #856404; }
+                        .note-passable { background-color: #f8d7da !important; color: #721c24; }
+                        .note-insuffisant { background-color: #f5c6cb !important; color: #721c24; }
+                        .stats-box {
+                            background: #e7f3ff;
+                            border: 2px solid #b3d9ff;
+                            border-radius: 8px;
+                            padding: 15px;
+                            margin: 15px 0;
+                        }
+                        .stats-item {
+                            display: inline-block;
+                            margin: 5px 15px;
+                            font-weight: bold;
+                        }
+                        .stats-label {
+                            color: #0056b3;
+                            font-size: 14px;
+                        }
+                        .stats-value {
+                            color: #003d82;
+                            font-size: 16px;
+                        }
+                    </style>
+
+                    <!-- En-tête du bulletin -->
+                    <div class="bulletin-header">
+                        <div class="bulletin-title">Bulletin Scolaire</div>
+                        <div class="bulletin-subtitle">
+                            <t t-esc="bulletin.trimestre_id.name"/> - Année Scolaire <t t-esc="bulletin.annee_scolaire"/>
+                        </div>
+                    </div>
+
+                    <!-- Informations étudiant -->
+                    <div class="student-info">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="info-section">
+                                    <span class="info-label">Nom et Prénom :</span>
+                                    <span class="info-value"><t t-esc="bulletin.student_id.name"/></span>
+                                </div>
+                                <div class="info-section">
+                                    <span class="info-label">Classe :</span>
+                                    <span class="info-value"><t t-esc="bulletin.batch_id.name"/></span>
+                                </div>
+                                <div class="info-section">
+                                    <span class="info-label">N° Bulletin :</span>
+                                    <span class="info-value"><t t-esc="bulletin.numero_bulletin"/></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-section">
+                                    <span class="info-label">Moyenne Générale :</span>
+                                    <span class="info-value" t-attf-style="color: #{bulletin.moyenne_generale >= 16 and '#28a745' or bulletin.moyenne_generale >= 14 and '#17a2b8' or bulletin.moyenne_generale >= 12 and '#ffc107' or bulletin.moyenne_generale >= 10 and '#6c757d' or '#dc3545'}; font-weight: bold; font-size: 18px;">
+                                        <t t-esc="'%.2f' % bulletin.moyenne_generale"/>/20
+                                    </span>
+                                </div>
+                                <div class="info-section">
+                                    <span class="info-label">Rang :</span>
+                                    <span class="info-value">
+                                        <t t-esc="bulletin.rang_classe"/>e sur <t t-esc="bulletin.total_eleves_classe"/> élèves
+                                    </span>
+                                </div>
+                                <div class="info-section">
+                                    <span class="info-label">Taux de Présence :</span>
+                                    <span class="info-value">
+                                        <t t-esc="'%.1f' % bulletin.taux_presence"/>%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistiques rapides -->
+                    <div class="stats-box text-center">
+                        <div class="stats-item">
+                            <span class="stats-label">Matières :</span>
+                            <span class="stats-value"><t t-esc="len(bulletin.note_lines)"/></span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Moyenne Classe :</span>
+                            <span class="stats-value"><t t-esc="'%.2f' % bulletin.moyenne_generale_classe"/>/20</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Mention :</span>
+                            <span class="stats-value">
+                                <t t-if="bulletin.moyenne_generale >= 16">Très Bien</t>
+                                <t t-elif="bulletin.moyenne_generale >= 14">Bien</t>
+                                <t t-elif="bulletin.moyenne_generale >= 12">Assez Bien</t>
+                                <t t-elif="bulletin.moyenne_generale >= 10">Passable</t>
+                                <t t-else="">Insuffisant</t>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Tableau des notes détaillé -->
+                    <table class="notes-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="width: 25%; vertical-align: middle;">Matières</th>
+                                <th colspan="2" style="width: 20%;">Notes d'Évaluation</th>
+                                <th rowspan="2" style="width: 10%; vertical-align: middle;">Moyenne<br/>Matière</th>
+                                <th rowspan="2" style="width: 8%; vertical-align: middle;">Coeff.</th>
+                                <th rowspan="2" style="width: 10%; vertical-align: middle;">Moyenne<br/>Classe</th>
+                                <th rowspan="2" style="width: 7%; vertical-align: middle;">Rang</th>
+                                <th rowspan="2" style="width: 20%; vertical-align: middle;">Appréciation</th>
+                            </tr>
+                            <tr>
+                                <th style="width: 10%;">Devoir</th>
+                                <th style="width: 10%;">Composition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="bulletin.note_lines" t-as="line">
+                                <tr>
+                                    <td class="subject-cell">
+                                        <t t-esc="line.subject_id.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-if="line.note_devoir and line.note_devoir > 0">
+                                            <t t-esc="'%.2f' % line.note_devoir"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </td>
+                                    <td>
+                                        <t t-if="line.note_composition and line.note_composition > 0">
+                                            <t t-esc="'%.2f' % line.note_composition"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </td>
+                                    <td t-attf-class="#{line.moyenne_matiere >= 16 and 'note-excellent' or line.moyenne_matiere >= 14 and 'note-tres-bien' or line.moyenne_matiere >= 12 and 'note-bien' or line.moyenne_matiere >= 10 and 'note-passable' or 'note-insuffisant'}" style="font-weight: bold;">
+                                        <t t-esc="'%.2f' % line.moyenne_matiere"/>
+                                    </td>
+                                    <td><t t-esc="line.coefficient"/></td>
+                                    <td><t t-esc="'%.2f' % line.moyenne_classe_matiere"/></td>
+                                    <td><t t-esc="line.rang_matiere"/></td>
+                                    <td style="text-align: left; padding-left: 10px; font-size: 11px;">
+                                        <t t-esc="line.appreciation or '-'"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <!-- Ligne de moyenne générale -->
+                            <tr class="moyenne-row">
+                                <td class="subject-cell">
+                                    <strong>MOYENNE GÉNÉRALE</strong>
+                                </td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td style="font-size: 16px;">
+                                    <strong><t t-esc="'%.2f' % bulletin.moyenne_generale"/></strong>
+                                </td>
+                                <td>-</td>
+                                <td><strong><t t-esc="'%.2f' % bulletin.moyenne_generale_classe"/></strong></td>
+                                <td><strong><t t-esc="bulletin.rang_classe"/></strong></td>
+                                <td style="text-align: left; padding-left: 10px;">
+                                    <strong>
+                                        <t t-if="bulletin.moyenne_generale >= 16">Excellent travail</t>
+                                        <t t-elif="bulletin.moyenne_generale >= 14">Très bon travail</t>
+                                        <t t-elif="bulletin.moyenne_generale >= 12">Bon travail</t>
+                                        <t t-elif="bulletin.moyenne_generale >= 10">Travail satisfaisant</t>
+                                        <t t-else="">Doit fournir plus d'efforts</t>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Informations sur les absences -->
+                    <div class="stats-box">
+                        <div class="row text-center">
+                            <div class="col-3">
+                                <span class="stats-label">Absences Justifiées :</span><br/>
+                                <span class="stats-value"><t t-esc="bulletin.absence_justifiees or 0"/></span>
+                            </div>
+                            <div class="col-3">
+                                <span class="stats-label">Absences Non Justifiées :</span><br/>
+                                <span class="stats-value" style="color: #dc3545;"><t t-esc="bulletin.absence_non_justifiees or 0"/></span>
+                            </div>
+                            <div class="col-3">
+                                <span class="stats-label">Retards :</span><br/>
+                                <span class="stats-value" style="color: #ffc107;"><t t-esc="bulletin.retards or 0"/></span>
+                            </div>
+                            <div class="col-3">
+                                <span class="stats-label">Taux de Présence :</span><br/>
+                                <span class="stats-value" t-attf-style="color: #{bulletin.taux_presence >= 90 and '#28a745' or bulletin.taux_presence >= 80 and '#ffc107' or '#dc3545'};">
+                                    <t t-esc="'%.1f' % bulletin.taux_presence"/>%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appréciation générale -->
+                    <t t-if="bulletin.appreciation_generale">
+                        <div class="appreciation-section">
+                            <div class="appreciation-title">Appréciation Générale du Conseil de Classe :</div>
+                            <p class="appreciation-text"><t t-esc="bulletin.appreciation_generale"/></p>
+                        </div>
+                    </t>
+
+                    <!-- Décision du conseil -->
+                    <t t-if="bulletin.decision_conseil">
+                        <div class="decision-section">
+                            <div class="decision-title">Décision du Conseil de Classe :</div>
+                            <p class="decision-text">
+                                <t t-esc="dict(bulletin._fields['decision_conseil'].selection)[bulletin.decision_conseil]"/>
+                            </p>
+                        </div>
+                    </t>
+
+                    <!-- Signatures -->
+                    <div class="signatures-section">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="signature-box">
+                                    <div class="signature-title">Le Directeur</div>
+                                    <div class="signature-line"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="signature-box">
+                                    <div class="signature-title">Le Professeur Principal</div>
+                                    <div class="signature-line"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="signature-box">
+                                    <div class="signature-title">Signature des Parents</div>
+                                    <div class="signature-line"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pied de page -->
+                    <div style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 10px; color: #6c757d;">
+                        <p>Document généré le <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y à %H:%M')"/> - 
+                        Bulletin N° <t t-esc="bulletin.numero_bulletin"/> - 
+                        <t t-esc="bulletin.trimestre_id.name"/> <t t-esc="bulletin.annee_scolaire"/></p>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Template de rapport (ancien - gardé pour compatibilité) -->
+    <template id="report_bulletin_template">
+        <t t-call="school_management.report_bulletin_template_professional"/>
+    </template>
+    
+    <!-- Template de compatibilité pour l'ancien nom -->
+    <template id="report_bulletin_template_new">
+        <t t-call="school_management.report_bulletin_template_professional"/>
+    </template>
+
+    <!-- Actions avec les identifiants utilisés dans le menu -->
+    <record id="action_op_trimestre" model="ir.actions.act_window">
+        <field name="name">Trimestres</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.trimestre</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_op_trimestre_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_op_bulletin" model="ir.actions.act_window">
+        <field name="name">Bulletins Scolaires</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.bulletin</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_op_bulletin_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_op_bulletin_template" model="ir.actions.act_window">
+        <field name="name">Modèles de Bulletins</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.bulletin.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo> 

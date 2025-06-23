@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue arborescente pour les types d'évaluation -->
+    <record id="view_op_evaluation_type_tree" model="ir.ui.view">
+        <field name="name">op.evaluation.type.tree</field>
+        <field name="model">op.evaluation.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="education_level"/>
+                <field name="type_evaluation"/>
+                <field name="coefficient"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les types d'évaluation -->
+    <record id="view_op_evaluation_type_form" model="ir.ui.view">
+        <field name="name">op.evaluation.type.form</field>
+        <field name="model">op.evaluation.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom du type d'évaluation"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="education_level"/>
+                            <field name="type_evaluation"/>
+                        </group>
+                        <group>
+                            <field name="coefficient"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche pour les types d'évaluation -->
+    <record id="view_op_evaluation_type_search" model="ir.ui.view">
+        <field name="name">op.evaluation.type.search</field>
+        <field name="model">op.evaluation.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="education_level"/>
+                <field name="type_evaluation"/>
+                <separator/>
+                <filter string="Actif" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactif" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Niveau Scolaire" name="education_level" context="{'group_by': 'education_level'}"/>
+                    <filter string="Type d'évaluation" name="type_evaluation" context="{'group_by': 'type_evaluation'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue arborescente pour les évaluations -->
+    <record id="view_op_evaluation_tree" model="ir.ui.view">
+        <field name="name">op.evaluation.tree</field>
+        <field name="model">op.evaluation</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-warning="state == 'ongoing'" decoration-success="state == 'done'" decoration-danger="state == 'cancelled'">
+                <field name="name"/>
+                <field name="evaluation_type_id"/>
+                <field name="date"/>
+                <field name="subject_id"/>
+                <field name="course_id"/>
+                <field name="batch_id"/>
+                <field name="faculty_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les évaluations -->
+    <record id="view_op_evaluation_form" model="ir.ui.view">
+        <field name="name">op.evaluation.form</field>
+        <field name="model">op.evaluation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" string="Démarrer" type="object" class="oe_highlight" 
+                            invisible="state != 'draft'"/>
+                    <button name="action_done" string="Terminer" type="object" class="oe_highlight"
+                            invisible="state != 'ongoing'"/>
+                    <button name="action_cancel" string="Annuler" type="object"
+                            invisible="state not in ('draft', 'ongoing')"/>
+                    <button name="action_draft" string="Remettre en brouillon" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,ongoing,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom de l'évaluation"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="evaluation_type_id"/>
+                            <field name="date"/>
+                            <field name="subject_id"/>
+                        </group>
+                        <group>
+                            <field name="course_id"/>
+                            <field name="batch_id"/>
+                            <field name="faculty_id"/>
+                            <field name="max_marks"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes" name="notes">
+                            <field name="evaluation_line_ids">
+                                <tree editable="bottom">
+                                    <field name="student_id"/>
+                                    <field name="note"/>
+                                    <field name="appreciation"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue recherche pour les évaluations -->
+    <record id="view_op_evaluation_search" model="ir.ui.view">
+        <field name="name">op.evaluation.search</field>
+        <field name="model">op.evaluation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="evaluation_type_id"/>
+                <field name="subject_id"/>
+                <field name="course_id"/>
+                <field name="batch_id"/>
+                <field name="faculty_id"/>
+                <separator/>
+                <filter string="Brouillon" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="En cours" name="ongoing" domain="[('state', '=', 'ongoing')]"/>
+                <filter string="Terminé" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Annulé" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Type d'évaluation" name="evaluation_type_id" context="{'group_by': 'evaluation_type_id'}"/>
+                    <filter string="Matière" name="subject_id" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Classe" name="course_id" context="{'group_by': 'course_id'}"/>
+                    <filter string="État" name="state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="act_open_op_evaluation_type_view" model="ir.actions.act_window">
+        <field name="name">Types d'évaluation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.evaluation.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_op_evaluation_type_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="act_open_op_evaluation_view" model="ir.actions.act_window">
+        <field name="name">Évaluations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.evaluation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_op_evaluation_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo> 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Catégorie pour les groupes de sécurité -->
+        <record id="module_category_school_management" model="ir.module.category">
+            <field name="name">Gestion Scolaire</field>
+            <field name="description">Catégorie pour la gestion scolaire</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <!-- Groupe Administrateur -->
+        <record id="group_school_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_school_management"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        
+        <!-- Groupe Utilisateur -->
+        <record id="group_school_user" model="res.groups">
+            <field name="name">Utilisateur</field>
+            <field name="category_id" ref="module_category_school_management"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        
+        <!-- Groupe Enseignant -->
+        <record id="group_school_teacher" model="res.groups">
+            <field name="name">Enseignant</field>
+            <field name="category_id" ref="module_category_school_management"/>
+            <field name="implied_ids" eval="[(4, ref('group_school_user'))]"/>
+        </record>
+        
+        <!-- Groupe Étudiant -->
+        <record id="group_school_student" model="res.groups">
+            <field name="name">Étudiant</field>
+            <field name="category_id" ref="module_category_school_management"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        
+        <!-- Règle de sécurité: les étudiants ne peuvent voir que leurs propres données -->
+        <record id="student_see_own_data_rule" model="ir.rule">
+            <field name="name">Étudiant: voir ses propres données</field>
+            <field name="model_id" ref="openeducat_core.model_op_student"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_school_student'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <!-- Règle de sécurité: les enseignants peuvent voir tous les étudiants -->
+        <record id="teacher_see_all_students_rule" model="ir.rule">
+            <field name="name">Enseignant: voir tous les étudiants</field>
+            <field name="model_id" ref="openeducat_core.model_op_student"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_school_teacher'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <!-- Règle de sécurité: les managers peuvent tout faire -->
+        <record id="manager_full_access_rule" model="ir.rule">
+            <field name="name">Manager: accès complet</field>
+            <field name="model_id" ref="openeducat_core.model_op_student"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_school_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+</odoo> 

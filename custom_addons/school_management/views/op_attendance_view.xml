@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue arborescente pour les présences -->
+    <record id="view_op_attendance_tree" model="ir.ui.view">
+        <field name="name">op.attendance.tree</field>
+        <field name="model">op.attendance</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state == 'present'" decoration-danger="state == 'absent'" decoration-warning="state == 'late'" decoration-info="state == 'excused'">
+                <field name="student_id"/>
+                <field name="session_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les présences -->
+    <record id="view_op_attendance_form" model="ir.ui.view">
+        <field name="name">op.attendance.form</field>
+        <field name="model">op.attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="present,absent,late,excused"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group name="basic_info">
+                            <field name="student_id"/>
+                            <field name="session_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group name="attendance_info">
+                            <field name="state"/>
+                            <field name="notes" placeholder="Notes sur la présence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue de recherche pour les présences -->
+    <record id="view_op_attendance_search" model="ir.ui.view">
+        <field name="name">op.attendance.search</field>
+        <field name="model">op.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="student_id"/>
+                <field name="session_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <separator/>
+                <filter string="Présent" name="present" domain="[('state', '=', 'present')]"/>
+                <filter string="Absent" name="absent" domain="[('state', '=', 'absent')]"/>
+                <filter string="En retard" name="late" domain="[('state', '=', 'late')]"/>
+                <filter string="Excusé" name="excused" domain="[('state', '=', 'excused')]"/>
+                <separator/>
+                <filter string="Aujourd'hui" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Cette semaine" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Étudiant" name="student_id" context="{'group_by': 'student_id'}"/>
+                    <filter string="Session" name="session_id" context="{'group_by': 'session_id'}"/>
+                    <filter string="État" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action pour les présences -->
+    <record id="action_op_attendance" model="ir.actions.act_window">
+        <field name="name">Présences</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_op_attendance_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première fiche de présence
+            </p>
+            <p>
+                Les présences permettent de suivre l'assiduité des étudiants aux sessions de cours.
+            </p>
+        </field>
+    </record>
+</odoo> 

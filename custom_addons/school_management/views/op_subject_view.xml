@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue arborescente pour les matières -->
+    <record id="view_op_subject_tree_inherit" model="ir.ui.view">
+        <field name="name">op.subject.tree.inherit</field>
+        <field name="model">op.subject</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_subject_tree"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="course_id" optional="show"/>
+                <field name="content_type" optional="show"/>
+                <field name="sequence" optional="hide"/>
+                <field name="duration" optional="show"/>
+                <field name="state" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les matières -->
+    <record id="view_op_subject_form_inherit" model="ir.ui.view">
+        <field name="name">op.subject.form.inherit</field>
+        <field name="model">op.subject</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_subject_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="course_id"/>
+                <field name="content_type"/>
+                <field name="sequence"/>
+            </field>
+            <sheet position="inside">
+                <notebook>
+                    <page name="pedagogical_content" string="Contenu Pédagogique">
+                        <group>
+                            <group name="objectives">
+                                <field name="learning_objectives"/>
+                                <field name="skills"/>
+                                <field name="prerequisites"/>
+                            </group>
+                            <group name="planning">
+                                <field name="duration"/>
+                                <field name="planned_date"/>
+                                <field name="state"/>
+                            </group>
+                        </group>
+                        <group name="dates" string="Planification">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="completion_rate"/>
+                        </group>
+                    </page>
+                    <page name="evaluation" string="Évaluation">
+                        <group>
+                            <group name="eval_type">
+                                <field name="evaluation_type"/>
+                                <field name="weight"/>
+                                <field name="max_grade"/>
+                            </group>
+                            <group name="exercises">
+                                <field name="has_exercises"/>
+                                <field name="exercises_description" attrs="{'invisible': [('has_exercises', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="resources" string="Ressources et Documents">
+                        <group>
+                            <field name="document_ids" widget="many2many_binary"/>
+                            <field name="online_resources"/>
+                        </group>
+                    </page>
+                    <page name="relations" string="Relations">
+                        <group>
+                            <group name="sessions">
+                                <field name="session_count"/>
+                                <field name="assignment_count"/>
+                            </group>
+                            <group name="course_info">
+                                <field name="course_name"/>
+                                <field name="course_level"/>
+                                <field name="main_teacher_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </field>
+    </record>
+
+    <!-- Vue de recherche pour les matières -->
+    <record id="view_op_subject_search_inherit" model="ir.ui.view">
+        <field name="name">op.subject.search.inherit</field>
+        <field name="model">op.subject</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_subject_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <field name="course_id"/>
+                <field name="content_type"/>
+                <field name="state"/>
+                <field name="main_teacher_id"/>
+                <separator/>
+                <filter name="filter_planned" string="Planifiés" domain="[('state', '=', 'planned')]"/>
+                <filter name="filter_ongoing" string="En Cours" domain="[('state', '=', 'ongoing')]"/>
+                <filter name="filter_done" string="Terminés" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter name="filter_has_exercises" string="Avec Exercices" domain="[('has_exercises', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_course" string="Cours" context="{'group_by': 'course_id'}"/>
+                    <filter name="group_content_type" string="Type de Contenu" context="{'group_by': 'content_type'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                    <filter name="group_teacher" string="Enseignant" context="{'group_by': 'main_teacher_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo> 

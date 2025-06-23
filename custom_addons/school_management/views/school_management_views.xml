@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire pour les étudiants -->
+        <record id="view_op_student_form_inherit" model="ir.ui.view">
+            <field name="name">op.student.form.inherit</field>
+            <field name="model">op.student</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_student_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Informations supplémentaires">
+                        <group>
+                            <field name="user_id"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Action pour accéder aux étudiants -->
+        <record id="action_student_view" model="ir.actions.act_window">
+            <field name="name">Étudiants</field>
+            <field name="res_model">op.student</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créer votre premier étudiant
+                </p>
+            </field>
+        </record>
+
+        <!-- Commenté pour utiliser menu.xml à la place -->
+        <!--
+        <menuitem id="menu_school_management_root"
+            name="Gestion Scolaire"
+            web_icon="school_management,static/description/icon.png"
+            sequence="10"/>
+
+        <menuitem id="menu_student_main"
+            name="Étudiants"
+            parent="menu_school_management_root"
+            sequence="10"/>
+
+        <menuitem id="menu_student_list"
+            name="Liste des étudiants"
+            parent="menu_student_main"
+            action="action_student_view"
+            sequence="10"/>
+
+        <menuitem id="menu_course_main"
+            name="Cours"
+            parent="menu_school_management_root"
+            sequence="20"/>
+
+        <menuitem id="menu_course_list"
+            name="Liste des cours"
+            parent="menu_course_main"
+            action="openeducat_core.act_open_op_course_view"
+            sequence="10"/>
+
+        <menuitem id="menu_faculty_main"
+            name="Enseignants"
+            parent="menu_school_management_root"
+            sequence="30"/>
+
+        <menuitem id="menu_faculty_list"
+            name="Liste des enseignants"
+            parent="menu_faculty_main"
+            action="openeducat_core.act_open_op_faculty_view"
+            sequence="10"/>
+        -->
+    </data>
+</odoo> 

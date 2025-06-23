@@ -1,0 +1,20 @@
+/* Styles pour le module de gestion scolaire */
+.o_school_management_root {
+    background-color: #f9f9f9;
+}
+
+.o_school_card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.o_school_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.o_school_title {
+    color: #0056b3;
+    font-weight: bold;
+} 

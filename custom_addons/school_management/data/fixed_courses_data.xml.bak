@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Niveaux scolaires fixes pour l'école française -->
+        
+        <record id="course_prescolaire" model="op.course">
+            <field name="code">PRESCO</field>
+            <field name="name">Préscolaire</field>
+            <field name="education_level">prescolaire</field>
+            <field name="evaluation_type">normal</field>
+            <field name="is_mandatory">True</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="course_primaire" model="op.course">
+            <field name="code">PRIM</field>
+            <field name="name">Primaire</field>
+            <field name="education_level">primary</field>
+            <field name="evaluation_type">normal</field>
+            <field name="is_mandatory">True</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="course_college" model="op.course">
+            <field name="code">COL</field>
+            <field name="name">Collège</field>
+            <field name="education_level">middle</field>
+            <field name="evaluation_type">normal</field>
+            <field name="is_mandatory">True</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="course_lycee" model="op.course">
+            <field name="code">LYC</field>
+            <field name="name">Lycée</field>
+            <field name="education_level">high</field>
+            <field name="evaluation_type">normal</field>
+            <field name="is_mandatory">True</field>
+            <field name="active">True</field>
+        </record>
+        
+    </data>
+</odoo> 

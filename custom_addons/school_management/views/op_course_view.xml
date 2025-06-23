@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_op_course_form_school_inherit" model="ir.ui.view">
+        <field name="name">op.course.form.school.inherit</field>
+        <field name="model">op.course</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_course_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="education_level"/>
+                <field name="school_year"/>
+                <field name="subject_area"/>
+                <field name="course_type"/>
+                <field name="coefficient"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="details" string="Détails Pédagogiques">
+                    <group name="planning">
+                        <group name="hours">
+                            <field name="weekly_hours"/>
+                            <field name="annual_hours"/>
+                        </group>
+                        <group name="evaluation">
+                            <field name="evaluation_type"/>
+                            <field name="coefficient"/>
+                        </group>
+                    </group>
+                    <group name="capacity_details">
+                        <field name="min_students"/>
+                        <field name="max_students"/>
+                        <field name="group_size"/>
+                    </group>
+                </page>
+                <page name="teachers" string="Enseignants">
+                    <group>
+                        <field name="main_teacher_id"/>
+                        <field name="teacher_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+                <page name="resources" string="Ressources">
+                    <group name="classroom">
+                        <field name="classroom_id"/>
+                        <field name="lab_required"/>
+                        <field name="computer_room_required"/>
+                    </group>
+                    <group name="materials">
+                        <field name="textbook"/>
+                        <field name="special_equipment"/>
+                    </group>
+                    <group name="content" colspan="2">
+                        <field name="official_program"/>
+                        <field name="learning_objectives"/>
+                        <field name="online_resources"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_op_course_tree_school_inherit" model="ir.ui.view">
+        <field name="name">op.course.tree.school.inherit</field>
+        <field name="model">op.course</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_course_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="education_level" optional="show"/>
+                <field name="school_year" optional="show"/>
+                <field name="subject_area" optional="show"/>
+                <field name="course_type" optional="show"/>
+                <field name="coefficient" optional="show"/>
+                <field name="weekly_hours" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_op_course_search_school_inherit" model="ir.ui.view">
+        <field name="name">op.course.search.school.inherit</field>
+        <field name="model">op.course</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_course_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="education_level"/>
+                <field name="school_year"/>
+                <field name="subject_area"/>
+                <field name="course_type"/>
+                <separator/>
+                <filter name="filter_obligatoire" string="Obligatoires" domain="[('course_type', '=', 'obligatoire')]"/>
+                <filter name="filter_specialite" string="Spécialités" domain="[('course_type', '=', 'specialite')]"/>
+                <filter name="filter_option" string="Options" domain="[('course_type', '=', 'option')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter name="group_education_level" string="Niveau d'Éducation" context="{'group_by': 'education_level'}"/>
+                <filter name="group_school_year" string="Classe" context="{'group_by': 'school_year'}"/>
+                <filter name="group_subject_area" string="Matière" context="{'group_by': 'subject_area'}"/>
+                <filter name="group_course_type" string="Type de Cours" context="{'group_by': 'course_type'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo> 

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dashboard API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffe6e6; border: 1px solid #ff9999; }
+        .success { background: #e6ffe6; border: 1px solid #99ff99; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .loading { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Test Dashboard API - Statistiques d'Attendance</h1>
+    
+    <div>
+        <button onclick="testStatistics()">Tester API Statistiques</button>
+        <button onclick="testTodaySessions()">Tester API Sessions Aujourd'hui</button>
+        <button onclick="testLogin()">Tester Login</button>
+        <button onclick="clearResults()">Effacer</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8069';
+        let sessionId = localStorage.getItem('session_id');
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `
+                <strong>[${new Date().toLocaleTimeString()}]</strong> ${message}
+            `;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function makeRequest(endpoint, options = {}) {
+            const url = `${API_BASE_URL}${endpoint}`;
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                ...options.headers
+            };
+            
+            // Ajouter le session ID si disponible
+            if (sessionId && !options.skipAuth) {
+                headers['X-Openerp-Session-Id'] = sessionId;
+            }
+
+            const fetchOptions = {
+                method: options.method || 'GET',
+                headers,
+                credentials: 'include',
+                mode: 'cors'
+            };
+            
+            if (options.body) {
+                fetchOptions.body = options.body;
+            }
+
+            log(`🚀 Requête: ${options.method || 'GET'} ${url}`);
+            log(`📋 Headers: ${JSON.stringify(headers, null, 2)}`);
+            
+            try {
+                const response = await fetch(url, fetchOptions);
+                
+                log(`📥 Réponse: ${response.status} ${response.statusText}`);
+                
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    log(`📄 Données: ${JSON.stringify(data, null, 2)}`, response.ok ? 'success' : 'error');
+                    return data;
+                } else {
+                    const text = await response.text();
+                    log(`📄 Texte: ${text}`, 'error');
+                    throw new Error(`Réponse non-JSON: ${text}`);
+                }
+            } catch (error) {
+                log(`❌ Erreur: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        async function testLogin() {
+            log('🔐 Test de connexion...');
+            
+            try {
+                const response = await makeRequest('/api/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'admin',
+                        db: 'odoo_ecole'
+                    }),
+                    skipAuth: true
+                });
+                
+                if (response.status === 'success' && response.session_id) {
+                    sessionId = response.session_id;
+                    localStorage.setItem('session_id', sessionId);
+                    log(`✅ Connexion réussie! Session ID: ${sessionId}`, 'success');
+                } else {
+                    log(`❌ Échec de connexion: ${response.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erreur de connexion: ${error.message}`, 'error');
+            }
+        }
+
+        async function testStatistics() {
+            log('📊 Test des statistiques d\'attendance...');
+            
+            if (!sessionId) {
+                log('⚠️ Pas de session ID. Essayez de vous connecter d\'abord.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await makeRequest('/api/attendance/statistics');
+                
+                if (response.status === 'success' && response.data) {
+                    const stats = response.data.global_statistics;
+                    log(`✅ Statistiques récupérées:
+                        - Total: ${stats.total_records}
+                        - Présents: ${stats.present_count}
+                        - Absents: ${stats.absent_count}
+                        - En retard: ${stats.late_count}
+                        - Taux de présence: ${stats.attendance_rate.toFixed(2)}%`, 'success');
+                } else {
+                    log(`❌ Format de réponse inattendu`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erreur statistiques: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTodaySessions() {
+            log('📅 Test des sessions d\'aujourd\'hui...');
+            
+            if (!sessionId) {
+                log('⚠️ Pas de session ID. Essayez de vous connecter d\'abord.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await makeRequest('/api/sessions/today');
+                
+                if (response.status === 'success' && response.sessions) {
+                    log(`✅ Sessions trouvées: ${response.sessions.length}`, 'success');
+                    response.sessions.forEach((session, index) => {
+                        log(`📝 Session ${index + 1}: ${session.name} 
+                             - ${session.start_datetime} à ${session.end_datetime}
+                             - Matière: ${session.subject?.name}
+                             - Classe: ${session.batch?.name}`, 'info');
+                    });
+                } else {
+                    log(`❌ Format de réponse inattendu`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erreur sessions: ${error.message}`, 'error');
+            }
+        }
+
+        // Test automatique au chargement
+        window.onload = function() {
+            log('🔍 Test automatique au chargement de la page');
+            
+            if (sessionId) {
+                log(`📋 Session ID trouvé: ${sessionId}`, 'success');
+                testStatistics();
+            } else {
+                log('⚠️ Aucun session ID trouvé. Connexion nécessaire.', 'error');
+            }
+        };
+    </script>
+</body>
+</html> 

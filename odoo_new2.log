@@ -1,0 +1,12 @@
+╔════════════════════════════════════════════════════════════╗
+║ Démarrage d'Odoo en mode développement                     ║
+╠════════════════════════════════════════════════════════════╣
+║ Chemin Odoo    : /opt/odoo/odoo-source/odoo-bin
+║ Configuration  : /opt/odoo/odoo.conf
+║ Logs           : /opt/odoo/odoo.log
+║ Filtre DB      : odoo_ecole
+║ Port HTTP      : 8069
+╚════════════════════════════════════════════════════════════╝
+Démarrage d'Odoo...
+Warn: Can't find .pfb for face 'Courier'
+Forced shutdown.

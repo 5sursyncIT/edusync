@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Vue formulaire étendue pour les termes de frais -->
+        <record id="view_op_fees_terms_form_inherit" model="ir.ui.view">
+            <field name="name">op.fees.terms.form.inherit</field>
+            <field name="model">op.fees.terms</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_fees_terms_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="school_year_id"/>
+                    <field name="is_mandatory"/>
+                    <field name="payment_method"/>
+                    <field name="late_fee_amount"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue arbre étendue pour les termes de frais -->
+        <record id="view_op_fees_terms_tree_inherit" model="ir.ui.view">
+            <field name="name">op.fees.terms.tree.inherit</field>
+            <field name="model">op.fees.terms</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_fees_terms_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="school_year_id"/>
+                    <field name="is_mandatory"/>
+                    <field name="payment_method"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue formulaire étendue pour les détails de frais des étudiants -->
+        <record id="view_op_student_fees_details_form_inherit" model="ir.ui.view">
+            <field name="name">op.student.fees.details.form.inherit</field>
+            <field name="model">op.student.fees.details</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_student_fees_details_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount']" position="after">
+                    <field name="payment_method"/>
+                    <field name="payment_reference"/>
+                    <field name="payment_deadline"/>
+                    <field name="is_late"/>
+                    <field name="late_fee_applied" attrs="{'invisible': [('is_late', '=', False)]}"/>
+                    <field name="parent_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue arbre étendue pour les détails de frais des étudiants -->
+        <record id="view_op_student_fees_details_tree_inherit" model="ir.ui.view">
+            <field name="name">op.student.fees.details.tree.inherit</field>
+            <field name="model">op.student.fees.details</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_student_fees_details_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="payment_method"/>
+                    <field name="is_late"/>
+                    <field name="payment_deadline"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue formulaire étendue pour les étudiants (onglet frais) -->
+        <record id="view_op_student_form_fees_inherit" model="ir.ui.view">
+            <field name="name">op.student.form.fees.inherit</field>
+            <field name="model">op.student</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_student_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='fees_details']" position="inside">
+                    <group>
+                        <group>
+                            <field name="total_fees_amount"/>
+                            <field name="paid_fees_amount"/>
+                        </group>
+                        <group>
+                            <field name="outstanding_fees_amount"/>
+                            <field name="fees_status"/>
+                        </group>
+                    </group>
+                    <separator/>
+                    <button name="generate_fees_for_student" 
+                            string="Générer les Frais" 
+                            type="object" 
+                            class="btn-primary"
+                            attrs="{'invisible': [('course_detail_ids', '=', [])]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue formulaire étendue pour les cours -->
+        <record id="view_op_course_form_fees_inherit" model="ir.ui.view">
+            <field name="name">op.course.form.fees.inherit</field>
+            <field name="model">op.course</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_course_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='fees_term_id']" position="after">
+                    <field name="total_fees_amount" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue formulaire étendue pour les éléments de frais -->
+        <record id="view_op_fees_element_form_inherit" model="ir.ui.view">
+            <field name="name">op.fees.element.form.inherit</field>
+            <field name="model">op.fees.element</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_fees_element_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='value']" position="after">
+                    <field name="is_optional"/>
+                    <field name="description"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vue arbre étendue pour les éléments de frais -->
+        <record id="view_op_fees_element_tree_inherit" model="ir.ui.view">
+            <field name="name">op.fees.element.tree.inherit</field>
+            <field name="model">op.fees.element</field>
+            <field name="inherit_id" ref="openeducat_fees.view_op_fees_element_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='value']" position="after">
+                    <field name="is_optional"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Action pour les frais en retard -->
+        <record id="action_fees_overdue" model="ir.actions.act_window">
+            <field name="name">Frais en Retard</field>
+            <field name="res_model">op.student.fees.details</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_late', '=', True)]</field>
+            <field name="context">{'create': False}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Aucun frais en retard trouvé !
+                </p>
+                <p>
+                    Cette vue affiche tous les frais qui sont payés après leur date d'échéance.
+                </p>
+            </field>
+        </record>
+
+        <!-- Action pour les frais impayés -->
+        <record id="action_fees_unpaid" model="ir.actions.act_window">
+            <field name="name">Frais Impayés</field>
+            <field name="res_model">op.student.fees.details</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'draft')]</field>
+            <field name="context">{'create': False}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tous les frais sont payés !
+                </p>
+                <p>
+                    Cette vue affiche tous les frais qui n'ont pas encore été facturés.
+                </p>
+            </field>
+        </record>
+
+        <!-- Rapport des frais par statut -->
+        <record id="action_fees_status_report" model="ir.actions.act_window">
+            <field name="name">Rapport des Frais par Statut</field>
+            <field name="res_model">op.student</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{'group_by': 'fees_status'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Aucun étudiant trouvé !
+                </p>
+                <p>
+                    Ce rapport affiche les étudiants groupés par statut de frais.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo> 

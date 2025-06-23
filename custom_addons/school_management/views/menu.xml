@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Menu Principal -->
+    <menuitem id="menu_school_root"
+              name="Gestion Scolaire"
+              web_icon="school_management,static/description/icon.png"
+              sequence="0"/>
+
+    <!-- Tableau de bord -->
+    <menuitem id="menu_school_dashboard"
+              name="Tableau de bord"
+              parent="menu_school_root"
+              action="school_management.action_school_dashboard"
+              sequence="1"/>
+
+    <!-- Menu Étudiants -->
+    <menuitem id="menu_school_student_root"
+              name="Étudiants"
+              parent="menu_school_root"
+              sequence="10"/>
+
+    <menuitem id="menu_school_student"
+              name="Étudiants"
+              parent="menu_school_student_root"
+              action="openeducat_core.act_open_op_student_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_student_course"
+              name="Cours"
+              parent="menu_school_student_root"
+              action="openeducat_core.act_open_op_course_view"
+              sequence="20"/>
+
+    <menuitem id="menu_school_student_batch"
+              name="Classes"
+              parent="menu_school_student_root"
+              action="openeducat_core.act_open_op_batch_view"
+              sequence="30"/>
+
+    <menuitem id="menu_school_student_subject"
+              name="Matières"
+              parent="menu_school_student_root"
+              action="openeducat_core.act_open_op_subject_view"
+              sequence="40"/>
+
+    <!-- Menu Enseignants -->
+    <menuitem id="menu_school_faculty_root"
+              name="Enseignants"
+              parent="menu_school_root"
+              sequence="15"/>
+
+    <menuitem id="menu_school_faculty"
+              name="Enseignants"
+              parent="menu_school_faculty_root"
+              action="openeducat_core.act_open_op_faculty_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_faculty_subject"
+              name="Matières enseignées"
+              parent="menu_school_faculty_root"
+              action="openeducat_core.act_open_op_subject_view"
+              sequence="20"/>
+
+    <!-- Menu Sessions & Présences -->
+    <menuitem id="menu_school_session_root"
+              name="Sessions &amp; Présences"
+              parent="menu_school_root"
+              sequence="18"/>
+
+    <menuitem id="menu_school_session"
+              name="Sessions de Cours"
+              parent="menu_school_session_root"
+              action="school_management.action_op_session"
+              sequence="10"/>
+
+    <menuitem id="menu_school_attendance"
+              name="Présences"
+              parent="menu_school_session_root"
+              action="school_management.action_op_attendance"
+              sequence="20"/>
+
+    <menuitem id="menu_school_classroom"
+              name="Salles de classe"
+              parent="menu_school_session_root"
+              action="school_management.action_op_classroom"
+              sequence="30"/>
+
+    <!-- Menu Bibliothèque -->
+    <menuitem id="menu_school_library_root"
+              name="Bibliothèque"
+              parent="menu_school_root"
+              sequence="20"/>
+
+    <menuitem id="menu_school_library_media"
+              name="Médias"
+              parent="menu_school_library_root"
+              action="openeducat_library.act_open_op_media_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_library_card"
+              name="Cartes de Bibliothèque"
+              parent="menu_school_library_root"
+              action="openeducat_library.act_open_op_library_card_view"
+              sequence="20"/>
+
+    <menuitem id="menu_school_library_movement"
+              name="Mouvements"
+              parent="menu_school_library_root"
+              action="openeducat_library.act_open_op_media_movement_view"
+              sequence="30"/>
+
+    <!-- Menu Examens -->
+    <menuitem id="menu_school_exam_root"
+              name="Examens"
+              parent="menu_school_root"
+              sequence="30"/>
+
+    <menuitem id="menu_school_exam_exam"
+              name="Examens"
+              parent="menu_school_exam_root"
+              action="openeducat_exam.act_open_op_exam_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_exam_session"
+              name="Sessions d'Examen"
+              parent="menu_school_exam_root"
+              action="openeducat_exam.act_open_op_exam_session_view"
+              sequence="20"/>
+
+    <menuitem id="menu_school_exam_type"
+              name="Types d'examens"
+              parent="menu_school_exam_root"
+              action="openeducat_exam.act_open_op_exam_type_view"
+              sequence="30"/>
+
+    <!-- Menus Évaluations -->
+    <menuitem id="menu_op_evaluation_main"
+              name="Evaluations"
+              parent="menu_school_exam_root"
+              sequence="40"/>
+
+    <menuitem id="menu_op_evaluation_type"
+              name="Types d'évaluation"
+              parent="menu_op_evaluation_main"
+              action="school_management.act_open_op_evaluation_type_view"
+              sequence="5"/>
+
+    <menuitem id="menu_op_evaluation"
+              name="Evaluations"
+              parent="menu_op_evaluation_main"
+              action="school_management.act_open_op_evaluation_view"
+              sequence="10"/>
+
+    <!-- Menu Bulletins & Notes -->
+    <menuitem id="menu_school_bulletin_root"
+              name="Bulletins &amp; Notes"
+              parent="menu_school_root"
+              sequence="32"/>
+
+    <menuitem id="menu_school_trimestre"
+              name="Trimestres"
+              parent="menu_school_bulletin_root"
+              action="school_management.action_op_trimestre"
+              sequence="10"/>
+
+    <menuitem id="menu_school_bulletin"
+              name="Bulletins"
+              parent="menu_school_bulletin_root"
+              action="school_management.action_op_bulletin"
+              sequence="20"/>
+
+    <menuitem id="menu_school_bulletin_template"
+              name="Modèles de Bulletins"
+              parent="menu_school_bulletin_root"
+              action="school_management.action_op_bulletin_template"
+              sequence="30"/>
+
+    <menuitem id="menu_school_evaluation"
+              name="Évaluations"
+              parent="menu_school_bulletin_root"
+              action="openeducat_exam.act_open_op_exam_session_view"
+              sequence="40"/>
+
+    <!-- Menu Présence (Ancien système OpenEduCat) -->
+    <menuitem id="menu_school_attendance_root"
+              name="Présence (Ancien)"
+              parent="menu_school_root"
+              sequence="40"/>
+
+    <menuitem id="menu_school_attendance_sheet"
+              name="Feuilles de Présence"
+              parent="menu_school_attendance_root"
+              action="openeducat_attendance.act_open_op_attendance_sheet_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_attendance_register"
+              name="Registres de Présence"
+              parent="menu_school_attendance_root"
+              action="openeducat_attendance.act_open_op_attendance_register_view"
+              sequence="20"/>
+
+    <!-- Menu Parents -->
+    <menuitem id="menu_school_parent_root"
+              name="Parents"
+              parent="menu_school_root"
+              sequence="50"/>
+
+    <menuitem id="menu_school_parent"
+              name="Parents"
+              parent="menu_school_parent_root"
+              action="openeducat_parent.act_open_op_parent_view"
+              sequence="10"/>
+
+    <!-- Menu Frais Scolaires -->
+    <menuitem id="menu_school_fees_root"
+              name="Frais Scolaires"
+              parent="menu_school_root"
+              sequence="55"/>
+
+    <menuitem id="menu_school_fees_terms"
+              name="Termes de Frais"
+              parent="menu_school_fees_root"
+              action="openeducat_fees.act_open_op_fees_terms_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_fees_details"
+              name="Détails des Frais"
+              parent="menu_school_fees_root"
+              action="openeducat_fees.act_open_op_student_fees_details_view"
+              sequence="20"/>
+
+    <menuitem id="menu_school_fees_unpaid"
+              name="Frais Impayés"
+              parent="menu_school_fees_root"
+              action="school_management.action_fees_unpaid"
+              sequence="30"/>
+
+    <menuitem id="menu_school_fees_overdue"
+              name="Frais en Retard"
+              parent="menu_school_fees_root"
+              action="school_management.action_fees_overdue"
+              sequence="40"/>
+
+    <menuitem id="menu_school_fees_status_report"
+              name="Rapport des Frais"
+              parent="menu_school_fees_root"
+              action="school_management.action_fees_status_report"
+              sequence="50"/>
+
+    <!-- Menu Admissions -->
+    <menuitem id="menu_school_admission"
+              name="Admissions"
+              parent="menu_school_root"
+              sequence="60"/>
+
+    <menuitem id="menu_school_admission_register"
+              name="Registre des admissions"
+              parent="menu_school_admission"
+              action="openeducat_admission.act_open_op_admission_register_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_admission_list"
+              name="Admissions"
+              parent="menu_school_admission"
+              action="openeducat_admission.act_open_op_admission_view"
+              sequence="20"/>
+
+    <!-- Menu Académique -->
+    <menuitem id="menu_school_academic"
+              name="Académique"
+              parent="menu_school_root"
+              sequence="20"/>
+
+    <menuitem id="menu_school_classroom"
+              name="Salles de classe"
+              parent="menu_school_academic"
+              action="openeducat_classroom.act_open_op_classroom_view"
+              sequence="30"/>
+
+    <!-- Menu Configuration -->
+    <menuitem id="menu_school_config"
+              name="Configuration"
+              parent="menu_school_root"
+              sequence="100"/>
+
+    <menuitem id="menu_school_academic_year"
+              name="Années académiques"
+              parent="menu_school_config"
+              action="openeducat_core.act_op_academic_year_view"
+              sequence="10"/>
+
+    <menuitem id="menu_school_academic_term"
+              name="Semestres"
+              parent="menu_school_config"
+              action="openeducat_core.act_op_academic_term_view"
+              sequence="20"/>
+
+    <menuitem id="menu_school_category"
+              name="Catégories"
+              parent="menu_school_config"
+              action="openeducat_core.act_open_op_category_view"
+              sequence="40"/>
+</odoo> 

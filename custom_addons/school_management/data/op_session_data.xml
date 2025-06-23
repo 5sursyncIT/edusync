@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Séquences pour les Sessions -->
+    <record id="seq_op_session" model="ir.sequence">
+        <field name="name">Session de Cours</field>
+        <field name="code">op.session</field>
+        <field name="prefix">SES</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Données de démo pour les Salles de Classe -->
+    <record id="classroom_001" model="op.classroom">
+        <field name="name">Salle A1</field>
+        <field name="code">A1</field>
+        <field name="capacity">30</field>
+        <field name="floor">1</field>
+        <field name="building">Bâtiment A</field>
+        <field name="is_active">True</field>
+        <field name="notes">Salle équipée d'un vidéoprojecteur</field>
+    </record>
+
+    <record id="classroom_002" model="op.classroom">
+        <field name="name">Salle A2</field>
+        <field name="code">A2</field>
+        <field name="capacity">25</field>
+        <field name="floor">1</field>
+        <field name="building">Bâtiment A</field>
+        <field name="is_active">True</field>
+        <field name="notes">Salle informatique</field>
+    </record>
+
+    <record id="classroom_003" model="op.classroom">
+        <field name="name">Salle B1</field>
+        <field name="code">B1</field>
+        <field name="capacity">35</field>
+        <field name="floor">1</field>
+        <field name="building">Bâtiment B</field>
+        <field name="is_active">True</field>
+        <field name="notes">Grande salle pour les cours magistraux</field>
+    </record>
+
+    <record id="classroom_004" model="op.classroom">
+        <field name="name">Laboratoire Sciences</field>
+        <field name="code">LAB-SCI</field>
+        <field name="capacity">20</field>
+        <field name="floor">2</field>
+        <field name="building">Bâtiment B</field>
+        <field name="is_active">True</field>
+        <field name="notes">Laboratoire équipé pour les expériences scientifiques</field>
+    </record>
+
+    <!-- Équipements pour la Salle A1 -->
+    <record id="equipment_projector_a1" model="op.classroom.equipment">
+        <field name="name">Vidéoprojecteur Epson</field>
+        <field name="equipment_type">projector</field>
+        <field name="quantity">1</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_001"/>
+    </record>
+
+    <record id="equipment_whiteboard_a1" model="op.classroom.equipment">
+        <field name="name">Tableau blanc interactif</field>
+        <field name="equipment_type">whiteboard</field>
+        <field name="quantity">1</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_001"/>
+    </record>
+
+    <!-- Équipements pour la Salle A2 (Informatique) -->
+    <record id="equipment_computers_a2" model="op.classroom.equipment">
+        <field name="name">Ordinateurs Dell</field>
+        <field name="equipment_type">computer</field>
+        <field name="quantity">25</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_002"/>
+    </record>
+
+    <record id="equipment_projector_a2" model="op.classroom.equipment">
+        <field name="name">Vidéoprojecteur</field>
+        <field name="equipment_type">projector</field>
+        <field name="quantity">1</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_002"/>
+    </record>
+
+    <!-- Équipements pour la Salle B1 -->
+    <record id="equipment_sound_b1" model="op.classroom.equipment">
+        <field name="name">Système audio</field>
+        <field name="equipment_type">sound_system</field>
+        <field name="quantity">1</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_003"/>
+    </record>
+
+    <record id="equipment_projector_b1" model="op.classroom.equipment">
+        <field name="name">Vidéoprojecteur HD</field>
+        <field name="equipment_type">projector</field>
+        <field name="quantity">1</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_003"/>
+    </record>
+
+    <!-- Équipements pour le Laboratoire -->
+    <record id="equipment_microscopes_lab" model="op.classroom.equipment">
+        <field name="name">Microscopes</field>
+        <field name="equipment_type">other</field>
+        <field name="quantity">10</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_004"/>
+    </record>
+
+    <record id="equipment_computers_lab" model="op.classroom.equipment">
+        <field name="name">Ordinateurs de laboratoire</field>
+        <field name="equipment_type">computer</field>
+        <field name="quantity">5</field>
+        <field name="is_working">True</field>
+        <field name="classroom_id" ref="classroom_004"/>
+    </record>
+
+</odoo> 

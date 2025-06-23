@@ -1,0 +1,11 @@
+// Export de tous les composants de présence
+export { default as AttendanceDemo } from './AttendanceDemo';
+export { default as AttendanceList } from './AttendanceList';
+export { default as AttendanceDashboard } from './AttendanceDashboard';
+export { default as AttendanceReports } from './AttendanceReports';
+export { default as AttendanceRegister } from './AttendanceRegister';
+export { default as SessionAttendance } from './SessionAttendance';
+export { default as AttendanceCrudManager } from './AttendanceCrudManager';
+export { default as SessionList } from './SessionList';
+export { default as SessionCreate } from './SessionCreate';
+export { default as SessionManager } from './SessionManager'; 

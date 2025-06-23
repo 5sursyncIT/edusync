@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue arborescente pour les sessions -->
+    <record id="view_op_session_tree" model="ir.ui.view">
+        <field name="name">op.session.tree</field>
+        <field name="model">op.session</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'">
+                <field name="name"/>
+                <field name="subject_id"/>
+                <field name="batch_id"/>
+                <field name="faculty_id"/>
+                <field name="date"/>
+                <field name="start_time" widget="float_time"/>
+                <field name="end_time" widget="float_time"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les sessions -->
+    <record id="view_op_session_form" model="ir.ui.view">
+        <field name="name">op.session.form</field>
+        <field name="model">op.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom de la session"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="basic_info">
+                            <field name="code"/>
+                            <field name="subject_id"/>
+                            <field name="batch_id"/>
+                            <field name="faculty_id"/>
+                            <field name="course_id"/>
+                        </group>
+                        <group name="schedule">
+                            <field name="date"/>
+                            <field name="start_time" widget="float_time"/>
+                            <field name="end_time" widget="float_time"/>
+                            <field name="duration"/>
+                            <field name="classroom_id"/>
+                            <field name="timing_id"/>
+                        </group>
+                    </group>
+                    <group name="pedagogical">
+                        <field name="topic" placeholder="Sujet du cours"/>
+                        <field name="objectives" placeholder="Objectifs pédagogiques"/>
+                    </group>
+                    <notebook>
+                        <page name="content" string="Contenu">
+                            <field name="content" placeholder="Contenu détaillé du cours"/>
+                        </page>
+                        <page name="homework" string="Devoirs">
+                            <field name="homework" placeholder="Devoirs donnés aux étudiants"/>
+                        </page>
+                        <page name="attendance" string="Présences">
+                            <group>
+                                <group name="stats">
+                                    <field name="attendance_count"/>
+                                    <field name="absent_count"/>
+                                    <field name="attendance_rate"/>
+                                </group>
+                            </group>
+                            <field name="attendance_ids">
+                                <tree editable="bottom">
+                                    <field name="student_id"/>
+                                    <field name="state"/>
+                                    <field name="arrival_time" widget="float_time"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="notes" string="Notes">
+                            <field name="notes" placeholder="Notes internes"/>
+                        </page>
+                        <page name="details" string="Détails techniques">
+                            <group>
+                                <group name="datetime_fields">
+                                    <field name="start_datetime"/>
+                                    <field name="end_datetime"/>
+                                </group>
+                                <group name="other_details">
+                                    <field name="color"/>
+                                    <field name="type"/>
+                                    <field name="days"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue de recherche pour les sessions -->
+    <record id="view_op_session_search" model="ir.ui.view">
+        <field name="name">op.session.search</field>
+        <field name="model">op.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="subject_id"/>
+                <field name="batch_id"/>
+                <field name="faculty_id"/>
+                <field name="date"/>
+                <field name="topic"/>
+                <separator/>
+                <filter string="Brouillon" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmée" name="confirm" domain="[('state', '=', 'confirm')]"/>
+                <filter string="Terminée" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Annulée" name="cancel" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="Aujourd'hui" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Cette semaine" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <filter string="Cours de rattrapage" name="makeup" domain="[('is_makeup', '=', True)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Matière" name="subject_id" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Classe" name="batch_id" context="{'group_by': 'batch_id'}"/>
+                    <filter string="Enseignant" name="faculty_id" context="{'group_by': 'faculty_id'}"/>
+                    <filter string="État" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action pour les sessions -->
+    <record id="action_op_session" model="ir.actions.act_window">
+        <field name="name">Sessions de Cours</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">op.session</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="view_op_session_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première session de cours
+            </p>
+            <p>
+                Les sessions permettent de planifier et gérer vos cours avec les étudiants.
+                Vous pouvez suivre les présences et noter les objectifs pédagogiques.
+            </p>
+        </field>
+    </record>
+</odoo> 

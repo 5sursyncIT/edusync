@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Ajouter l'utilisateur administrateur au groupe Back Office s'il existe -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_core.group_op_back_office'))]}" />
+        </function>
+        -->
+        
+        <!-- Ajouter l'utilisateur aux groupes OpenEduCat avec write -->
+        <!-- Groupes attendance -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_attendance.group_op_attendance_manager'))]}" />
+        </function>
+        
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_attendance.group_op_attendance_user'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupe library -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_library.group_op_library'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupes assignment -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_assignment.group_op_assignment_manager'))]}" />
+        </function>
+        
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_assignment.group_op_assignment_user'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupe parent -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_parent.group_op_parent'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupes timetable -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_timetable.group_op_timetable_manager'))]}" />
+        </function>
+        
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_timetable.group_op_timetable_user'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupes exam -->
+        <!-- Temporairement commenté car le module exam n'est pas correctement installé
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_exam.group_op_exam_manager'))]}" />
+        </function>
+        -->
+        
+        <!-- Temporairement commenté car le module exam n'est pas correctement installé
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_exam.group_op_exam_user'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupe fees -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_fees.group_op_fees_admin'))]}" />
+        </function>
+        -->
+        
+        <!-- Groupes activity -->
+        <!-- Commenté temporairement
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_activity.group_op_activity_manager'))]}" />
+        </function>
+        
+        <function model="res.users" name="write">
+            <value model="res.users" search="[('id', '=', ref('base.user_admin'))]"/>
+            <value eval="{'groups_id': [(4, ref('openeducat_activity.group_op_activity_user'))]}" />
+        </function>
+        -->
+    </data>
+</odoo> 

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_op_student_form_school_inherit" model="ir.ui.view">
+        <field name="name">op.student.form.school.inherit</field>
+        <field name="model">op.student</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_student_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="school_info" string="Information Scolaire">
+                    <group>
+                        <group name="school_details">
+                            <field name="school_level"/>
+                            <field name="is_scholarship"/>
+                            <field 
+                                name="scholarship_type" 
+                                groups="openeducat_core.group_op_back_office_admin"
+                                invisible="not is_scholarship"/>
+                        </group>
+                        <group name="school_services">
+                            <field name="transport_needed"/>
+                            <field name="school_insurance"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_op_student_tree_school_inherit" model="ir.ui.view">
+        <field name="name">op.student.tree.school.inherit</field>
+        <field name="model">op.student</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_student_tree"/>
+        <field name="arch" type="xml">
+            <tree position="inside">
+                <field name="school_level" optional="show"/>
+                <field name="is_scholarship" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_op_student_search_school_inherit" model="ir.ui.view">
+        <field name="name">op.student.search.school.inherit</field>
+        <field name="model">op.student</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_student_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <field name="school_level"/>
+                <separator/>
+                <filter name="filter_scholarship" string="Boursiers" domain="[('is_scholarship', '=', True)]"/>
+                <filter name="filter_transport" string="Transport" domain="[('transport_needed', '=', True)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_school_level" string="Niveau Scolaire" context="{'group_by': 'school_level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <data>
+        <!-- Extension du formulaire étudiant pour améliorer l'affichage des parents -->
+        <record id="view_op_student_form_parents_extended" model="ir.ui.view">
+            <field name="name">op.student.form.parents.extended</field>
+            <field name="model">op.student</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_student_form"/>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <!-- Ajouter des champs parents dans l'onglet Personal Information -->
+                <xpath expr="//page[@string='Personal Information']//group[2]" position="after">
+                    <group string="Informations Parents" col="2">
+                        <field name="has_parents" invisible="1"/>
+                        <field name="primary_parent_id" readonly="1" 
+                               options="{'no_create': True, 'no_edit': True}"
+                               invisible="not has_parents"/>
+                        <field name="parent_names" readonly="1" invisible="not has_parents"/>
+                        <field name="parent_phones" readonly="1" invisible="not has_parents"/>
+                        <field name="parent_emails" readonly="1" invisible="not has_parents"/>
+                        <div colspan="2" invisible="not has_parents">
+                            <button name="%(openeducat_parent.act_open_op_parent_view)d" 
+                                    type="action" 
+                                    string="Gérer les Parents" 
+                                    class="btn-primary"
+                                    context="{'default_student_ids': [(6, 0, [active_id])]}"/>
+                        </div>
+                        <div colspan="2" invisible="has_parents">
+                            <p class="text-muted">
+                                <i class="fa fa-info-circle"/> Aucun parent enregistré pour cet étudiant.
+                            </p>
+                            <button name="%(openeducat_parent.act_open_op_parent_view)d" 
+                                    type="action" 
+                                    string="Ajouter un Parent" 
+                                    class="btn-success"
+                                    context="{'default_student_ids': [(6, 0, [active_id])]}"/>
+                        </div>
+                    </group>
+                </xpath>
+
+                <!-- Ajouter un onglet dédié aux parents -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Parents &amp; Tuteurs" name="parents_tab">
+                        <group>
+                            <group string="Parents Enregistrés">
+                                <field name="parent_ids" nolabel="1" context="{'form_view_ref': 'openeducat_parent.view_op_parent_form'}">
+                                    <tree string="Parents" editable="false">
+                                        <field name="name" string="Nom"/>
+                                        <field name="mobile" string="Téléphone"/>
+                                        <field name="relationship_id" string="Relation"/>
+                                        <field name="user_id" string="Compte Utilisateur" optional="show"/>
+                                        <button name="create_parent_user" 
+                                                type="object" 
+                                                string="Créer Compte Portal" 
+                                                icon="fa-user-plus"
+                                                invisible="user_id != False"
+                                                class="btn-sm btn-success"/>
+                                    </tree>
+                                    <form string="Parent">
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="name" required="1"/>
+                                                    <field name="mobile"/>
+                                                    <field name="relationship_id" required="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="user_id" readonly="1"/>
+                                                    <button name="create_parent_user" 
+                                                            type="object" 
+                                                            string="Créer Compte Portal" 
+                                                            class="btn-primary"
+                                                            invisible="user_id != False"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </group>
+                            <group string="Actions Rapides">
+                                <div>
+                                    <button name="%(openeducat_parent.act_open_op_parent_view)d" 
+                                            type="action" 
+                                            string="Nouveau Parent" 
+                                            class="btn-primary"
+                                            context="{'default_student_ids': [(6, 0, [active_id])]}"/>
+                                </div>
+                                <div invisible="not parent_ids">
+                                    <p class="text-info">
+                                        <i class="fa fa-info-circle"/> 
+                                        Les parents peuvent accéder au portail pour suivre les frais et les notes de l'étudiant.
+                                    </p>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <!-- Ajouter des boutons statistiques pour les parents -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="action" 
+                            name="%(openeducat_parent.act_open_op_parent_view)d"
+                            context="{'search_default_student_ids': active_id}"
+                            icon="fa-users">
+                        <field string="Parents" name="has_parents" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extension de la vue liste pour afficher les informations parents -->
+        <record id="view_op_student_tree_parents_extended" model="ir.ui.view">
+            <field name="name">op.student.tree.parents.extended</field>
+            <field name="model">op.student</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_student_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='emergency_contact']" position="after">
+                    <field name="parent_names" string="Parents" optional="show"/>
+                    <field name="parent_phones" string="Tél. Parents" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extension de la vue recherche pour filtrer par parents -->
+        <record id="view_op_student_search_parents_extended" model="ir.ui.view">
+            <field name="name">op.student.search.parents.extended</field>
+            <field name="model">op.student</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_student_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='course_detail_ids']" position="after">
+                    <field name="parent_names" string="Parent"/>
+                    <field name="parent_phones" string="Téléphone Parent"/>
+                </xpath>
+                <xpath expr="//group[@expand='0']" position="inside">
+                    <filter string="Avec Parents" name="with_parents" domain="[('has_parents', '=', True)]"/>
+                    <filter string="Sans Parents" name="without_parents" domain="[('has_parents', '=', False)]"/>
+                    <separator/>
+                    <filter string="Grouper par Parent Principal" name="group_by_primary_parent" 
+                            context="{'group_by': 'primary_parent_id'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo> 

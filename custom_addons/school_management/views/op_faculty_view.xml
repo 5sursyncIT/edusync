@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue arborescente pour les enseignants -->
+    <record id="view_op_faculty_tree_inherit" model="ir.ui.view">
+        <field name="name">op.faculty.tree.inherit</field>
+        <field name="model">op.faculty</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_faculty_tree"/>
+        <field name="arch" type="xml">
+            <field name="mobile" position="after">
+                <field name="subject_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les enseignants -->
+    <record id="view_op_faculty_form_inherit" model="ir.ui.view">
+        <field name="name">op.faculty.form.inherit</field>
+        <field name="model">op.faculty</field>
+        <field name="inherit_id" ref="openeducat_core.view_op_faculty_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Matières enseignées">
+                    <field name="subject_ids"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo> 

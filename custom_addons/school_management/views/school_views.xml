@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue form pour les niveaux scolaires -->
+    <record id="view_school_level_form" model="ir.ui.view">
+        <field name="name">school.level.form</field>
+        <field name="model">school.level</field>
+        <field name="arch" type="xml">
+            <form string="Niveau Scolaire">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="type"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Classes">
+                            <field name="grade_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="capacity"/>
+                                    <field name="teacher_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue tree pour les niveaux scolaires -->
+    <record id="view_school_level_tree" model="ir.ui.view">
+        <field name="name">school.level.tree</field>
+        <field name="model">school.level</field>
+        <field name="arch" type="xml">
+            <tree string="Niveaux Scolaires">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action pour les niveaux scolaires -->
+    <record id="action_school_level" model="ir.actions.act_window">
+        <field name="name">Niveaux Scolaires</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">school.level</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_school_management_root"
+        name="Gestion Scolaire"
+        sequence="10"/>
+
+    <menuitem id="menu_school_management_config"
+        name="Configuration"
+        parent="menu_school_management_root"
+        sequence="100"/>
+
+    <menuitem id="menu_school_level"
+        name="Niveaux Scolaires"
+        parent="menu_school_management_config"
+        action="action_school_level"
+        sequence="10"/>
+</odoo> 
